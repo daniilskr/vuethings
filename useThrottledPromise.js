@@ -1,21 +1,21 @@
 import { ref } from "vue";
 
-export const useThrottledPromise = (callback) => { 
+export const useThrottledPromise = (callback: any) => { 
     const isProcessing = ref(false);
-    let lastUnprocessed = null;
+    let lastUnprocessed: any = null;
 
     const processCallback = () => {
         if (lastUnprocessed) {
             const process = lastUnprocessed;
             lastUnprocessed = null;
-            process().catch(processCallback).then(processCallback);
+            process().then(processCallback).catch(processCallback);
         } else {
             isProcessing.value = false;
         }
     };
 
     // Возможно стоит перегонять args в JSON и обратно, чтобы они не мутировали, пока промис ждет своего часа?
-    const callThrottled = (...args) => {
+    const callThrottled = (...args: any) => {
         lastUnprocessed = () => callback(...args);
         if (! isProcessing.value) {
             isProcessing.value = true;
